@@ -35,7 +35,7 @@ In some cases the cli generator might be named as <code>openapi-generator-cli</c
  1. If during execution you encounter an error saying "any module/model name" not found, kindly generate the client using the following global property:<br/>
  <code>openapi-generator generate -i file_name.yaml -g a_language_name_from_list -o /path/to/output_folder --global-property skipFormModel=false</code><br/>
 
-## Importing in Postman
+## Importing openapi spec in Postman
 In order to import the [OpenAPI](openapi.yaml) file in postman, please refer to : [working with openAPI](https://learning.postman.com/docs/integrations/available-integrations/working-with-openAPI/)
 
 ## Contributing and Code of conduct
