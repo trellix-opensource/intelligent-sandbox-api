@@ -1,0 +1,41 @@
+<!-- HTML for static distribution bundle build -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>TIS APIs</title>
+    <link rel="stylesheet" type="text/css" href="dist/swagger-ui.css" />
+    <link rel="icon" type="image/png" href="dist/svg/Trellix_X.svg" sizes="32x32" />
+    <style>
+      html
+      {
+        box-sizing: border-box;
+        overflow: -moz-scrollbars-vertical;
+        overflow-y: scroll;
+      }
+      *,
+      *:before,
+      *:after
+      {
+        box-sizing: inherit;
+      }
+      body
+      {
+        margin:0;
+        background: #fafafa;
+      }
+      .topbar-wrapper img {
+	content:url('dist/svg/Trellix_Logo.svg');
+	}
+      .download-url-input,.download-url-button { display: none !important; } 
+    </style>
+  </head>
+
+  <body>
+    <div id="swagger-ui"></div>
+
+    <script src="dist/swagger-ui-bundle.js" charset="UTF-8"> </script>
+    <script src="dist/swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
+    <script src="dist/swagger-initializer.js" charset="UTF-8"> </script>
+  </body>
+</html>
