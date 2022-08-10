@@ -1,0 +1,958 @@
+openapi: 3.0.0
+
+info:
+  description: |
+    Trellix Intelligent Sandbox (Former: Advanced Threat Defense) provides an Application Programming Interface
+    (API) framework for external applications to access core Trellix Intelligent Sandbox (former: ATD) functions through the REST protocol.
+    
+    REST stands for Representational State Transfer. It relies on a stateless, client-server and cacheable communication protocol – HTTP. It is an architecture style for designing networked applications. RESTful applications use HTTP requests to post data (create and/or update), get data (query information) and delete data. Thus, REST uses HTTP for all CRUD (Create/Read/Update/Delete) operations. It is a lightweight alternative to mechanisms like RPC (Remote Procedure Calls) and Web Services such as SOAP and WSDL.
+    
+    **NOTE: Make sure to tweak the input parameters according to your organizational needs.**
+ 
+    [Importing this document in Postman](https://learning.postman.com/docs/integrations/available-integrations/working-with-openAPI/)
+    
+    [How to create SDK from this?](./README.md)
+    
+  version: 1.0.0
+  title: Trellix Intelligent Sandbox
+  termsOfService: https://www.trellix.com/en-in/products/advanced-threat-defense.html
+  contact:
+    url: https://www.trellix.com/en-in/products/advanced-threat-defense.html
+  
+servers:
+  - url: https://<TIS_IP>/php
+
+tags:
+  - name: Session
+    description: Operations about user session
+  
+  - name: User management
+    description: |
+      Operations related to users in Trellix Intelligent Sandbox (Former: Advanced Threat Defense)
+
+  - name: Malware status management
+    description: |
+      Operations related to samples and their handling in Trellix Intelligent Sandbox (Former: Advanced Threat Defense)
+    
+
+paths:
+  /session.php:
+  #Login
+    get:
+      tags:
+        - Session
+      operationId: Login
+      summary: Login into your Trellix Intelligent Sandbox.
+      description: |
+        This URL allows a third party application to log on to Trellix Intelligent Sandbox (Former: Advanced
+        Threat Defense) API framework.
+      security:
+        - ve-sdk-api-login: []
+      deprecated: false
+      parameters:
+        - in: header
+          name: VE-API-Version
+          description: The API Version from which the user wants to connect (This is an optional header parameter)
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/vnd.ve.v1.0+json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        
+        "400":
+          description: Bad request, kindly check the input parameters.
+          
+        "401":
+          description: Unauthorized user kindly check VE-SDK-API and try again for the same.
+          
+        "404":
+          description: Resource not found.
+          
+        "5XX":
+          description: Server error occured.
+  
+    #Logout
+    delete:
+      tags:
+        - Session
+      operationId: Logout
+      summary: Logout from Trellix Intelligent Sandbox.
+      description: |
+        This URL allows logging out from Trellix Intelligent Sandbox (Former: Advanced Threat Defense). <br/>It generates either a response or an error message. Proper logout must be performed in order to clear the session information; else, subsequent logon is not allowed until session timeout.
+      deprecated: false
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/vnd.ve.v1.0+json:
+              schema:
+                $ref: "#/components/schemas/LogoutResponse"
+                
+        "400":
+          description: Bad request, kindly check the input parameters.
+
+        "401":
+          description: Unauthorized user kindly check VE-SDK-API and try again for the same.
+          
+        "404":
+          description: Resource not found.
+        
+        "5XX":
+          description: Server error occured.
+
+  #Heartbeat
+  /heartbeat.php:
+    get:
+      tags:
+        - User management
+      operationId: HeartBeat
+      summary: Information about user
+      description: |
+        This URL provides Trellix Intelligent Sandbox (Former: Advanced Threat Defense) availability information to the user.
+      deprecated: false
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/vnd.ve.v1.0+json:
+              schema:
+                $ref: "#/components/schemas/HeartBeatResponse"
+                
+        "400":
+          description: Bad request, kindly check the input parameters.
+
+        "401":
+          description: Unauthorized user kindly check VE-SDK-API and try again for the same.
+          
+        "404":
+          description: Resource not found.
+        
+        "5XX":
+          description: Server error occured.
+          
+  #List the analyzer profiles
+  /vmprofiles.php:
+    get:
+      tags:
+        - User management
+      operationId: AnalyzerProfiles
+      summary: Display the analyzer profiles.
+      description: This URL is to display the analyzer profiles. Only the analyzer profiles to which the user has access are displayed
+      deprecated: false
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/vnd.ve.v1.0+json:
+              schema:
+                $ref: "#/components/schemas/AnalyzerProfilesResponse"
+        
+        "400":
+          description: Bad request, kindly check the input parameters.
+
+        "401":
+          description: Unauthorized user kindly check VE-SDK-API and try again for the same.
+          
+        "404":
+          description: Resource not found.
+          
+        "5XX":
+          description: Server error occured.
+
+  #Task ID List
+  /getTaskIdList.php:
+    get:
+      tags:
+        - Malware status management
+      operationId: TaskIdList
+      summary: Fetches the list of task id's associated with a job id.
+      description: This URL fetches the list of task id's associated with a job id.
+      parameters:
+        - in: query
+          name: jobId
+          required: true
+          schema:
+            type: integer
+          description: Serves as an identifier for the previously submitted file.
+      deprecated: false      
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/vnd.ve.v1.0+json:
+              schema:
+                $ref: "#/components/schemas/TaskIdListResponse"
+                
+        "400":
+          description: Bad request, kindly check the input parameters.
+
+        "401":
+          description: Unauthorized user kindly check VE-SDK-API and try again for the same.
+          
+        "404":
+          description: Resource not found.
+          
+        "5XX":
+          description: Server error occured.
+
+  #Check Brief Status
+  /samplestatus.php:
+    get:
+      tags:
+        - Malware status management
+      operationId: BriefStatus
+      summary: This URL checks the analysis status.
+      description: |
+        Provides Trellix Intelligent Sandbox (Former: Advanced Threat Defense) analysis status to the user.
+      parameters:
+        - in: query
+          name: iTaskId
+          required: true
+          schema:
+            type: integer
+          description: This is the returned iTaskId value in the submission step.
+      deprecated: false
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/vnd.ve.v1.0+json:
+              schema:
+                $ref: "#/components/schemas/BriefStatusResponse"
+                
+        "400":
+          description: Bad request, kindly check the input parameters.
+
+        "401":
+          description: Unauthorized user kindly check VE-SDK-API and try again for the same.
+          
+        "404":
+          description: Resource not found.
+          
+        "5XX":
+          description: Server error occured.
+
+  #Get report content
+  /showreport.php:
+    get:
+      tags:
+        - Malware status management
+      operationId: ReportContent
+      summary: Download the analysis report files.
+      description: This URL is used to selectively download the analysis report files.
+      parameters:
+        - in: query
+          name: md5
+          required: false
+          schema:
+            type: string
+            
+        - in: query
+          name: iTaskId  
+          required: false
+          schema:
+            type: integer
+            
+        - in: query
+          name: jobId  
+          required: false
+          schema:
+            type: integer
+          
+        - in: query
+          name: iType
+          required: true
+          schema:
+            type: string
+            enum:
+              - "txt"
+              - "html"
+              - "json"
+              - "xml"
+              - "ioc"
+              - "stix"
+              # - "zip"
+              # - "pdf"
+              # - "sample"
+          
+          description: File type of the output
+        #Priority is given to jobId  
+      deprecated: false
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/vnd.ve.v1.0+json:
+              schema:
+                $ref: "#/components/schemas/ReportContentResponse"
+                
+        "400":
+          description: Bad request. Kindly provide any one of the following options - md5/iTaskId/jobId.
+          
+        "401":
+          description: Unauthorized user kindly check VE-SDK-API and try again for the same.
+          
+        "404":
+          description: Resource not found.
+        
+        "5XX":
+          description: Server error occured.
+  
+  #Users List
+  /briefUserList.php:
+    get:
+      tags:
+        - User management
+      operationId: UsersList
+      summary: Display the user profile information.
+      description: |
+        This URL displays the user profile information present on the Trellix Intelligent Sandbox (Former: Advanced Threat Defense).
+      
+      parameters:
+        - in: query
+          name: userType
+          required: true
+          schema:
+            type: string
+            enum:
+              - "NSP"
+              - "MWG"
+              - "STAND_ALONE"
+          description: This is the usertype associated with a user profile. For example NSP, MWG, STAND_ALONE and so on.
+      deprecated: false
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/vnd.ve.v1.0+json:
+              schema:
+                $ref: "#/components/schemas/UsersListResponse"
+        
+        "400":
+          description: Bad request, kindly check the input parameters.
+
+        "401":
+          description: Unauthorized user kindly check VE-SDK-API and try again for the same.
+          
+        "404":
+          description: Resource not found.
+          
+        "5XX":
+          description: Server error occured.
+
+  #Verify blacklisted and whitelisted hash values
+  /atdHashLookup.php:
+    post:
+      tags:
+        - Malware status management
+      operationId: VerifyHashValues
+      summary: Checks the status of hash value submitted by user.
+      description: This URL is to check if a user submitted hash value is either blacklisted or whitelisted. Only single hash value can be verified at a time.
+      requestBody:
+        required: true
+        content: 
+          multipart/form-data:
+            schema:
+              required:
+                - data
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    md5:
+                      type: string
+                      description: Valid value should look like this- '{"md5":"A3CCFD0AA0C17FD23AA9FD0D84B86C05"}'
+        description: Contains the following parameters defined in a json string.
+          md5- Any valid 32 digit hexadecimal number
+      
+      deprecated: false
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/vnd.ve.v1.0+json:
+              schema:
+                $ref: "#/components/schemas/VerifyHashValuesResponse"
+                
+        "400":
+          description: Bad request, kindly check the input parameters.
+
+        "401":
+          description: Unauthorized user kindly check VE-SDK-API and try again for the same.
+          
+        "404":
+          description: Resource not found.
+        
+        "5XX":
+          description: Server error occured.
+
+  #File/URL submission
+  /fileupload.php:
+    post:
+      tags:
+        - Malware status management
+      operationId: FileSubmission
+      summary: Upload a file/URL for dynamic analysis.
+      description: The URL is used to upload a file/web URL for dynamic analysis by using the provided Analyzer Profile. Only single file/web URL can be submitted at a time.
+      requestBody:
+        required: true
+        content: 
+          multipart/form-data:
+            schema:
+              required:
+                - data
+              type: object
+              properties:
+                amas_filename:
+                  type: string
+                  format: binary
+                  description: The name of the sample file.
+                    This parameter is optional for URL submissions.
+                data:
+                  type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        xMode:
+                          type: boolean
+                          description:  Optional parameter with values either 0 or 1.
+                          example: 0
+                        overrideOS:
+                          type: boolean
+                          example: 1
+                        messageId:
+                          type: string
+                          description: Maximum 128-character string
+                          example: ""
+                        vmProfileList:
+                          type: integer
+                          description:  Analyzer profile ID. The profile ID number can be found in the UI Policy/Analyzer Profile page.
+                          example: 11
+                        submitType:
+                          type: integer
+                          description: This parameter accepts 4 values — '0', '1', '2' and '3'.
+                            0 — Regular file upload
+                            1 — URL submission — URL link is processed inside analyzer VM
+                            2 — Submit file with URL
+                            3 — URL Download — File from URL is first downloaded and then analyzed 
+                          example: 1
+                        url:
+                          type: string
+                          description: Any valid web URL.
+                          example: "http://www.yahoo.com"
+                    
+      deprecated: false
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/vnd.ve.v1.0+json:
+              schema:
+                $ref: "#/components/schemas/FileSubmissionResponse"
+                
+        "400":
+          description: Bad request, kindly check the input parameters.
+
+        "401":
+          description: Unauthorized user kindly check VE-SDK-API and try again for the same.
+          
+        "404":
+          description: Resource not found.
+          
+        "5XX":
+          description: Server error occured.
+   
+  #Bulk Sample Status
+  /getBulkStatus.php:
+    post:
+      tags:
+        - Malware status management
+      operationId: BulkStatus
+      summary: Find the status of bulk number of samples in a single query.
+      description: The Resource URL is to find the status of bulk number of samples in a single query.
+      requestBody:
+        required: true
+        content: 
+          multipart/form-data:
+            schema:
+              required:
+                - data
+              type: object
+              properties: 
+                data:
+                  type: object
+                  properties:
+                    bulkrequest:
+                      type: object
+                      #description:  This parameter is a json string which accepts following sub-parameters:-
+                      properties:
+                        numRequest:
+                          type: integer
+                          format: int 32
+                          description: This is a numeric filed which contains the number of samples for which status is queried. The maximum value is 100.
+                        jobIDs:
+                          type: array
+                          items: 
+                            type: integer
+                            format: int 32
+                            description: This is a numeric field which contains the number of samples for which status is queried. The maximum value is 100.
+                        taskIDs:
+                          type: array
+                          items: 
+                            type: integer
+                            format: int 32
+                            description: This is a numeric field which contains the number of samples for which status is queried. The maximum value is 100.
+      deprecated: false
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/vnd.ve.v1.0+json:
+              schema:
+                $ref: "#/components/schemas/BulkStatusResponse"
+                
+        "400":
+          description: Bad request, kindly check the input parameters.
+
+        "401":
+          description: Unauthorized user kindly check VE-SDK-API and try again for the same.
+          
+        "404":
+          description: Resource not found.
+          
+        "5XX":
+          description: Server error occured.
+
+
+externalDocs:
+  description: |
+    Find out more about Trellix Intelligent Sandbox (Former: Advanced Threat Defense) APIs.
+  url: https://docs.trellix.com/en/bundle/trellix-intelligent-sandbox-5.0.x-api-reference-guide/page/GUID-F600CDC5-827A-4435-BD37-E0DF91810AB1.html
+
+security:
+  - ve-sdk-api: []
+
+components:
+  securitySchemes:
+    ve-sdk-api-login: 
+      type: apiKey
+      in: header       # can be "header", "query" or "cookie"
+      name: VE-SDK-API
+      description: Base64 encoded <b>'user name:password'</b> string
+      
+    ve-sdk-api: 
+      type: apiKey
+      in: header       
+      name: VE-SDK-API
+      description: Base64 encoded <b>'session:userId'</b> string
+
+      
+  schemas:
+    #Login
+    LoginResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        results:
+          type: object
+          properties:
+            session:
+              type: string
+              description: Logged on session id.
+            userId:
+              type: string
+              description: Logged on user id.
+            apiVersion:
+              type: string
+              description: API version.
+            matdVersion:
+              type: string
+              description: |
+                Trellix Intelligent Sandbox (Former: Advanced Threat Defense) version.
+            serverTZ:
+              type: string
+              description: Server time zone.
+            isAdmin:
+              type: string
+              description: "Determines whether the user has admin privileges. <br />
+                IsAdmin- '1' – User has admin privileges. <br/>
+                IsAdmin- '0' – User does not have admin privileges."
+              example: 1
+            isCurrentAPI:
+              type: boolean
+              description: Check whether isCurrentAPI returns true or false.
+              example: 1
+                  
+    #HeartBeat      
+    HeartBeatResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        results:
+          type: object
+          properties:
+            session:
+              type: string
+              description: Logged on session id.
+            userId:
+              type: string
+              description: Logged on user id.
+            heartBeat:
+              type: string
+              description: The time in seconds when the response was returned.
+
+    #List the analyzer profiles     
+    AnalyzerProfilesResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              vmProfileid:
+                type: integer
+                example : 1
+              userid:
+                type: integer
+                example : 1
+              imageid:
+                type: integer
+                example : 10
+              maxExecTime:
+                type: integer
+                example : 180
+              minExecTime:
+                type: integer
+                example : 5
+              recursiveAnalysis:
+                type: integer
+                example : 1
+              name:
+                type: string
+                example : "winXp"
+              vmDesc:
+                type: string
+                example : "winXPsp3"
+              summary:
+                type: integer
+                example : 1
+              userLog:
+                type: integer
+                example : 1
+              asm:
+                type: integer
+                example : 1
+              locBlackList:
+                type: integer
+                example : 0
+              mfeAV:
+                type: integer
+                example : 1
+              reAnalysis:
+                type: integer
+                example : 0
+              gtiTS:
+                type: integer
+                example : 1
+              gam:
+                type: integer
+                example : 1
+              selectedOSName:
+                type: string
+                example : "winXPsp3"
+              sandbox:
+                type: integer
+                example : 1
+              internet:
+                type: integer
+                example : 0
+            
+    #Logout      
+    LogoutResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+          description: Success = true / false gives the logout success status.
+        results:
+          type: object
+          properties: 
+            return:
+             type: integer
+             example: 0
+             description: |-
+                Return value. <br/>This value is 0 if logout is successful, otherwise an error message is returned.
+                  
+    #Task ID List
+    TaskIdListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        result:
+          type: object
+          properties:
+            taskIdList:
+              type: string
+              example: "201"
+              description: 
+                If a zip file with two samples is submitted, then the response contains task id's of the two samples.<br/>
+                <br/>
+                If a single file is submitted, then the response contains a task id of the single sample.
+    
+    #Check Brief Status
+    BriefStatusResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+          description : Success is true if the request is processed successfully else false.
+        results:
+          type: object
+          properties:
+            taskid:
+              type: integer
+              description: Task ID of the submitted sample file.  
+            istate:
+              type: integer
+              description: istate is a numeric value as explained above.  
+            status:
+              type: string
+              description: Current status of the sample.
+              example: waiting / analyzing / completed.
+            filename:
+              type: string
+              description: Name of the sample file.  
+            md5:
+              type: string
+              description: |
+                The MD5 hash value of the sample file as calculated by Trellix Intelligent Sandbox (Former: Advanced Threat Defense).
+            vmProfile:
+              type: string
+              description: The internally assigned ID for the VM Profile that was used.  
+            jobid:
+              type: integer
+              description: Job ID of the submitted sample file.  
+            vmName:
+              type: string
+              description: VM name based on the operating system that was used for dynamic analysis.  
+            vmDesc:
+              type: string
+              description: The user-provided description for the analyzer VM that was used for dynamic analysis.  
+          
+    #Get report content
+    ReportContentResponse:
+      type: string #TBD with ideal type string vs object
+      description: Content of the requested result file.
+      
+    
+    #Users List
+    UsersListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        results:
+          type: array
+          description: Contains array of json data with following parameters.
+          items:
+            type: object
+            properties:
+              idx:
+                type: integer
+                example: 5
+                description: This is the id assigned for the user profile [Unique Identifier of the user].
+              loginId:
+                type: string
+                example: "meg"
+                description: Login-id of the users.
+              userType:
+                type: string
+                example: "NSP"
+                description: This is the input parameter passed.
+              fullName:
+                type: string
+                example: "Virtual Network Security Platform"
+                description: Name associated with the user profile.
+              
+    #Verify blacklisted and whitelisted hash values
+    VerifyHashValuesResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        results:
+          type: object
+          example: "A3CCFD0AA0B17FD23AA9FD0D84B86C:w" 
+          description: Displays input hash value and its corresponding character.<br/>
+            'w' — hash value is whitelisted by user.<br/>
+            'b' — hash value is blacklisted.<br/>
+            '0' — hash value is not in the whitelist or blacklist.<br/>
+            'j' — hash is submitted in last three days.<br/>
+            'Invalid input data' — invalid hash value.<br/>
+            The valuation is performed in the following order-<br/>
+            Check if it is 'b'. Return 'b' if it is the case.<br/>
+            Check if it is 'j'. Return 'j' if it is the case.<br/>
+            Check if it is 'w'. Return 'w' if it is the case.<br/>
+            Otherwise return '0'.
+        
+        
+    #File/URL submission
+    FileSubmissionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        subId:
+          type: integer
+          example: 72057594037928306
+          description:  64-bit JobId assigned for the sample.
+        mimeType:
+          type: string
+          example: "application/pdf"
+        fileId:
+          type: string
+          example: ""
+        filesWait:
+          type: integer
+          example: 0
+          description: Number of samples in waiting state.
+        estimatedTime:
+          type: integer
+          example: 0
+          description: Estimated time for the analysis to finish on the submitted sample.
+        results:
+          type: array
+          description: Contains json data with following parameters.
+            md5- MD5 hash value of the submitted sample.
+          items:
+            properties:
+              taskId:
+                type: integer
+                description: 64-bit ID assigned for the submitted sample. taskId is -1 for a .zip file and has the same value (-1), in case skipTaskId is enabled.
+              messageId:
+                type: string
+                example: ""
+                description: String that is sent in the request to identify the sample.
+              file:
+                type: string
+                example: "clean_pdf.pdf"
+              submitType:
+                type: string
+                example: "0"
+                description: This parameter accepts 4 values — '0', '1', '2' and '3'.
+              url:
+                type: string
+                example: ""
+                description: Any valid web URL.
+              destIp:
+                type: string
+                example: null
+              srcIp:
+                type: string
+                example: ""
+              md5:
+                type: string
+                example: "F0F9F5762565782F62FED035584537D0"
+                description: MD5 hash value of the submitted sample.
+              sha1:
+                type: string
+                example: "7F53D6A3DC01D30567049B11B264E1B551F7D0B7"
+                description: SHA-1 hash value of the submitted sample.
+              sha256:
+                type: string
+                example: "BD3C5441961707875CE5BE7A1497D44EC5C63250B4FD7577085B134571CE0AF7"
+                description: SHA-256 hash value of the submitted sample.
+              size:
+                type: string
+                example: "144779"
+              cache:
+                type: integer
+                example: 0
+                description: Determines whether the file was submitted for analysis in the past, and the corresponding action. 
+
+    #Bulk Sample Status
+    BulkStatusResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        results:
+          type: object
+          description: Contains json data with following parameters-
+          properties:
+            bulkresponse:
+              type: object
+              properties:
+                numResponse:
+                  type: integer
+                  format: int 32
+                  description: This is a numeric value which represents number of samples status retrieved. This is equal to numRequest in the input data.
+                status:
+                  type: array
+                  description: This is an array of jobIDs/taskIDs with their analysis status and score.
+                  items:
+                    properties:
+                      jobID:
+                        type: integer
+                        format: int 32
+                        example: 4512
+                      status:
+                        type: integer
+                        format: int 32
+                        example: 5
+                        description: JobID/taskID status displays following values-<br/>
+                          -1 — not available <br/>
+                          1 — accepted <br/>
+                          2 — waiting <br/>
+                          3 — analyzing <br/>
+                          4 — xmode <br/>
+                          5 — completed <br/>
+                          6 — cancelled <br/>
+                          7 — invalid <br/>
+                          8 — discarded <br/>
+                      score:
+                        type: integer
+                        description: The sample score defines the severity of the sample. 
+                          The score includes the following values- <br/>
+
+                          -6 — Analysis not completed <br/>
+                          -2 — Failed <br/>
+                          -1 — Clean <br/>
+                          0 — Unverified <br/>
+                          1 — Informational <br/>
+                          2 — Low <br/>
+                          3 — Medium <br/>
+                          4 — High <br/>
+                          5 — Very High <br/>
+                          
+    #Enable or disable custom YARA scanners
+    YARASettingsResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+          description: The custom YARA scanner enable or disable action succeeded.
