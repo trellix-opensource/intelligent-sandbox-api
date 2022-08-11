@@ -948,11 +948,3 @@ components:
                           4 — High <br/>
                           5 — Very High <br/>
                           
-    #Enable or disable custom YARA scanners
-    YARASettingsResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          example: true
-          description: The custom YARA scanner enable or disable action succeeded.
